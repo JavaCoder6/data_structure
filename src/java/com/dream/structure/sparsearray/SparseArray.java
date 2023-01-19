@@ -1,7 +1,9 @@
 package com.dream.structure.sparsearray;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * @author lisifan
@@ -17,7 +19,7 @@ public class SparseArray {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         //需求 一个二维数组 变成一个稀疏数组
         int h = 20;
         int w = 20;
@@ -46,6 +48,8 @@ public class SparseArray {
                 }
             }
         }
+
+
         int[][] ints1 = new int[3][count + 1];
         ints1[0][0] = w1;
         ints1[1][0] = h1;
@@ -57,17 +61,39 @@ public class SparseArray {
                     ints1[0][sh] = i;
                     ints1[1][sh] = i1;
                     ints1[2][sh] = ints[i][i1];
-                    sh ++;
+                    sh++;
                 }
             }
         }
         for (int[] ints2 : ints1) {
             for (int i : ints2) {
-                System.out.print(i+":");
+                System.out.print(i + ":");
             }
             System.out.println();
         }
-       System.out.println(Arrays.toString(ints1));
+        HashMap<Integer, int[][]> integerHashMap = new HashMap<>();
+        integerHashMap.put(1,ints1);
+        FileOutputStream fileOutputStream = new FileOutputStream("src/java/com/dream/structure/sparsearray/SparseArray.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(integerHashMap);
+        FileInputStream fileInputStream = new FileInputStream("src/java/com/dream/structure/sparsearray/SparseArray.txt");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        Object object = objectInputStream.readObject();
+        HashMap<Integer, int[][]> object1 = (HashMap<Integer, int[][]>) object;
+        int[][] ints4 = object1.get(1);
+        ints1 = ints4;
+        System.out.println();
+
+        int[][] ints2 = new int[ints1[0][0]][ints1[1][0]];
+        for (int i = 1; i < ints1[0].length; i++) {
+            ints2[ints1[0][i]][ints1[1][i]] = ints1[2][i];
+        }
+        for (int[] ints3 : ints2) {
+            for (int i : ints3) {
+                System.out.print(i + ":");
+            }
+            System.out.println();
+        }
 
 //        int count = 0 ;
 //        for (int[] anInt : ints) {
